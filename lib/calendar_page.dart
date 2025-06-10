@@ -102,7 +102,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       });
                     },
                     eventLoader: _getEventsForDay,
-                    calendarStyle: CalendarStyle(
+                    calendarStyle: const CalendarStyle(
                       markerDecoration: BoxDecoration(
                         color: Color(0xFF4A90E2),
                         shape: BoxShape.circle,
@@ -124,7 +124,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    headerStyle: HeaderStyle(
+                    headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
                       titleCentered: true,
                       titleTextStyle: TextStyle(
@@ -149,9 +149,9 @@ class _CalendarPageState extends State<CalendarPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
               child: Row(
                 children: [
-                  Icon(Icons.event_note, color: Color(0xFF4A90E2)),
+                  const Icon(Icons.event_note, color: Color(0xFF4A90E2)),
                   const SizedBox(width: 8),
-                  Text(
+                  const Text(
                     'Task pada ',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
@@ -159,7 +159,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     _selectedDay != null
                         ? '${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}'
                         : '${_focusedDay.day}/${_focusedDay.month}/${_focusedDay.year}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF4A90E2),
                       fontSize: 16,
@@ -180,7 +180,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     BoxShadow(
                       color: Colors.black.withOpacity(0.03),
                       blurRadius: 8,
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -213,7 +213,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                 color:
                                     event['isDone'] == true
                                         ? Colors.green
-                                        : Color(0xFF4A90E2),
+                                        : const Color(0xFF4A90E2),
                               ),
                               title: Text(
                                 event['task'] ?? '',

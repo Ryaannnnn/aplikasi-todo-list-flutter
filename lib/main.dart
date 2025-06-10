@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
       routes: {
-        '/': (context) => AuthWrapper(),
-        '/main': (context) => HomeScreen(),
-        '/login': (context) => LoginPage(),
-        '/signup': (context) => SignUpPage(),
+        '/': (context) => const AuthWrapper(),
+        '/main': (context) => const HomeScreen(),
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignUpPage(),
       },
     );
   }
@@ -59,12 +59,14 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (snapshot.hasData) {
-          return HomeScreen();
+          return const HomeScreen();
         }
-        return LoginPage();
+        return const LoginPage();
       },
     );
   }
@@ -96,7 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
       // Navigasi ke halaman tambah task
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AddEditTaskPage(isEdit: false)),
+        MaterialPageRoute(
+          builder: (context) => const AddEditTaskPage(isEdit: false),
+        ),
       ).then((value) {
         if (value == true) fetchTodos();
       });
@@ -193,7 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final eventId = todoList[index]['eventId'];
     // Hapus event Google Calendar hanya jika user login Google
     GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
-    googleUser ??= await _googleSignIn.signIn();
+    // Hapus baris berikut agar tidak auto sign in lagi:
+    // googleUser ??= await _googleSignIn.signIn();
     if (eventId != null &&
         eventId.toString().isNotEmpty &&
         googleUser != null) {
@@ -474,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.brightness_6, color: settingsIconColor),
                   SizedBox(width: 12),
@@ -490,8 +495,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Switch(value: false, onChanged: null),
                 ],
               ),
-              Divider(height: 32),
-              Row(
+              const Divider(height: 32),
+              const Row(
                 children: [
                   Icon(Icons.notifications_active, color: settingsIconColor),
                   SizedBox(width: 12),
@@ -507,8 +512,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Switch(value: false, onChanged: null),
                 ],
               ),
-              Divider(height: 32),
-              Row(
+              const Divider(height: 32),
+              const Row(
                 children: [
                   Icon(Icons.sync, color: settingsIconColor),
                   SizedBox(width: 12),
@@ -524,12 +529,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Switch(value: false, onChanged: null),
                 ],
               ),
-              Divider(height: 32),
+              const Divider(height: 32),
               Row(
                 children: [
-                  Icon(Icons.language, color: settingsIconColor),
-                  SizedBox(width: 12),
-                  Expanded(
+                  const Icon(Icons.language, color: settingsIconColor),
+                  const SizedBox(width: 12),
+                  const Expanded(
                     child: Text(
                       'Bahasa (Language)',
                       style: TextStyle(
@@ -540,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   DropdownButton<String>(
                     value: 'ID',
-                    items: [
+                    items: const [
                       DropdownMenuItem(value: 'ID', child: Text('Indonesia')),
                       DropdownMenuItem(value: 'EN', child: Text('English')),
                     ],
@@ -548,8 +553,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              Divider(height: 32),
-              ListTile(
+              const Divider(height: 32),
+              const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.info_outline, color: settingsIconColor),
                 title: Text(
@@ -559,8 +564,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 subtitle: Text('Versi 1.0.0 - To Do List App'),
                 onTap: null,
               ),
-              Divider(height: 32),
-              ListTile(
+              const Divider(height: 32),
+              const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.delete_forever, color: Colors.red),
                 title: Text(
@@ -573,8 +578,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: null,
               ),
-              Divider(height: 32),
-              ListTile(
+              const Divider(height: 32),
+              const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(
                   Icons.feedback_outlined,
@@ -586,8 +591,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: null,
               ),
-              Divider(height: 32),
-              ListTile(
+              const Divider(height: 32),
+              const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.lock_outline, color: settingsIconColor),
                 title: Text(
@@ -596,8 +601,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: null,
               ),
-              Divider(height: 32),
-              ListTile(
+              const Divider(height: 32),
+              const ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(
                   Icons.privacy_tip_outlined,
@@ -614,37 +619,132 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       // Profile Page (Halaman 4)
-      Center(
+      Container(
+        color: const Color(0xFFF6F8FA),
+        width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.account_circle, size: 80, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(
-              displayName ?? '-',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              currentUser?.email ?? '-',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text('Logout', style: TextStyle(color: Colors.red)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.red),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            Container(
+              width: double.infinity,
+              height: 180,
+              decoration: const BoxDecoration(
+                color: Color(0xFF86B6F6),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
                 ),
               ),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                await _googleSignIn.signOut();
-                Navigator.pushReplacementNamed(context, '/login');
-              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.account_circle,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    displayName ?? '-',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    currentUser?.email ?? '-',
+                    style: const TextStyle(fontSize: 16, color: Colors.white70),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 32,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.person,
+                          color: Color(0xFF176B87),
+                        ),
+                        title: const Text('Nama Pengguna'),
+                        subtitle: Text(displayName ?? '-'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.email,
+                          color: Color(0xFF176B87),
+                        ),
+                        title: const Text('Email'),
+                        subtitle: Text(currentUser?.email ?? '-'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.lock_outline,
+                          color: Color(0xFF176B87),
+                        ),
+                        title: const Text('Ganti Password'),
+                        onTap: () {
+                          // TODO: Implementasi ganti password
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: ListTile(
+                        leading: const Icon(Icons.logout, color: Colors.red),
+                        title: const Text(
+                          'Logout',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onTap: () async {
+                          await FirebaseAuth.instance.signOut();
+                          if (await _googleSignIn.isSignedIn()) {
+                            try {
+                              await _googleSignIn.disconnect();
+                            } catch (e) {
+                              // ignore error
+                            }
+                            await _googleSignIn.signOut();
+                          }
+                          if (mounted) {
+                            Navigator.pushReplacementNamed(context, '/login');
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -656,20 +756,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     const Color primaryColor = Color(0xFF86B6F6);
 
+    // AppBar hanya untuk halaman To-Do List (index 0)
+    PreferredSizeWidget? appBar =
+        _selectedIndex == 0
+            ? AppBar(
+              title: const Text(
+                'DailyBlue',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              centerTitle: true,
+              backgroundColor: const Color(0xFFF6F8FA),
+              foregroundColor: Colors.black,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+            )
+            : null;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'To Do List',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: Color(0xFFF6F8FA),
-        foregroundColor: Colors.black,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
+      appBar: appBar,
       body: Container(
-        color: Color(0xFFF6F8FA),
+        color: const Color(0xFFF6F8FA),
         child: SafeArea(child: _pages[_selectedIndex]),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -735,24 +841,24 @@ class _HomeScreenState extends State<HomeScreen> {
         width: 64,
         height: 64,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 117, 163, 224),
+          color: const Color.fromARGB(255, 117, 163, 224),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),
               blurRadius: 8,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: RawMaterialButton(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           elevation: 0,
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddEditTaskPage(isEdit: false),
+                builder: (context) => const AddEditTaskPage(isEdit: false),
               ),
             ).then((value) {
               if (value == true) fetchTodos();

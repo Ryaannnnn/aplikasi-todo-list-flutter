@@ -1,5 +1,5 @@
 CheckMe!
-Sebuah aplikasi To-Do List sederhana untuk membantu Anda tetap teratur, dibuat oleh Adryan Muhammad Haidar.
+Sebuah aplikasi To-Do List sederhana untuk membantu Anda tetap teratur, dibuat oleh Adryan Muhammad Haidar dan Ajeng Dwi Wahyuni.
 
 Deskripsi & Fitur Utama
 Aplikasi ini memungkinkan pengguna untuk mengelola tugas harian mereka dengan mudah. Semua data disimpan secara online dan terhubung dengan akun pengguna, sehingga dapat diakses kapan saja.

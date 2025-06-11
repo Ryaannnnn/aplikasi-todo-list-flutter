@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services/google_calendar_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'login_page.dart';
 import 'signup_page.dart';
@@ -13,16 +14,17 @@ import 'calendar_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   if (kIsWeb) {
     await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyBnlyCUNXFTbKf-DUFyEB8D6E94L4edbHw",
-        authDomain: "todolist-ac951.firebaseapp.com",
-        projectId: "todolist-ac951",
-        storageBucket: "todolist-ac951.appspot.com",
-        messagingSenderId: "610679045814",
-        appId: "1:610679045814:web:36af15a16ae857dac23017",
-        measurementId: "G-SKNMP7GX28",
+      options: FirebaseOptions(
+        apiKey: dotenv.env['API_KEY']!,
+        authDomain: dotenv.env['AUTH_DOMAIN']!,
+        projectId: dotenv.env['PROJECT_ID']!,
+        storageBucket: dotenv.env['STORAGE_BUCKET']!,
+        messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+        appId: dotenv.env['APP_ID']!,
+        measurementId: dotenv.env['MEASUREMENT_ID'],
       ),
     );
   } else {
@@ -122,14 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchDisplayName() async {
     if (currentUser == null) return;
-    // Mengambil dari 'users' (jika ada, dari pendaftaran manual)
     DocumentSnapshot userDoc =
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)
             .get();
 
-    // Mengambil dari 'todoapp' (jika ada, dari pendaftaran dengan Google)
     DocumentSnapshot todoAppDoc =
         await FirebaseFirestore.instance
             .collection('todoapp')
@@ -137,14 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
             .get();
 
     setState(() {
-      // Prioritaskan username dari koleksi 'users' atau 'todoapp'
       if (userDoc.exists && (userDoc.data() as Map).containsKey('username')) {
         displayName = userDoc.get('username');
       } else if (todoAppDoc.exists &&
           (todoAppDoc.data() as Map).containsKey('username')) {
         displayName = todoAppDoc.get('username');
       } else {
-        // Fallback ke displayName dari auth provider (misal: Google) atau email
         displayName = currentUser!.displayName ?? currentUser!.email ?? '-';
       }
     });
@@ -195,10 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (currentUser == null) return;
     final todoId = todoList[index]['id'];
     final eventId = todoList[index]['eventId'];
-    // Hapus event Google Calendar hanya jika user login Google
     GoogleSignInAccount? googleUser = await _googleSignIn.signInSilently();
-    // Hapus baris berikut agar tidak auto sign in lagi:
-    // googleUser ??= await _googleSignIn.signIn();
     if (eventId != null &&
         eventId.toString().isNotEmpty &&
         googleUser != null) {
@@ -469,9 +464,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+
       // Calendar Page (Halaman 1)
       const CalendarPage(),
       const SizedBox.shrink(),
+
       // Settings Page (Halaman 3)
       SingleChildScrollView(
         child: Padding(
@@ -618,6 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+
       // Profile Page (Halaman 4)
       Container(
         color: const Color(0xFFF6F8FA),
@@ -709,9 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Color(0xFF176B87),
                         ),
                         title: const Text('Ganti Password'),
-                        onTap: () {
-                          // TODO: Implementasi ganti password
-                        },
+                        onTap: () {},
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -731,9 +727,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (await _googleSignIn.isSignedIn()) {
                             try {
                               await _googleSignIn.disconnect();
-                            } catch (e) {
-                              // ignore error
-                            }
+                            } catch (e) {}
                             await _googleSignIn.signOut();
                           }
                           if (mounted) {

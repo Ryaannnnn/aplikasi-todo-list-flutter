@@ -37,3 +37,6 @@ android/gradle.properties.old
 .vscode/
 *.iml
 *.ipr
+
+# Env files
+.env

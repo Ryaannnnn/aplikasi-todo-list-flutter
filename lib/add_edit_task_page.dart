@@ -48,7 +48,6 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
       }
 
       if (_selectedDate != null) {
-        // [PERBAIKAN] Menggunakan format tanggal standar (default)
         _dateController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
       }
     }
@@ -65,7 +64,6 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        // [PERBAIKAN] Menggunakan format tanggal standar (default)
         _dateController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
       });
     }
@@ -76,7 +74,6 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     setState(() => _loading = true);
 
     // Logika penyimpanan data ke Firestore dan Google Calendar
-    // tidak perlu diubah dan sudah benar.
     String? eventId;
     try {
       GoogleSignInAccount? googleUser;
@@ -186,7 +183,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 48), // Spacer agar judul tetap di tengah
+                const SizedBox(width: 48),
               ],
             ),
           ),
